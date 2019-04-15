@@ -40,7 +40,20 @@ module.exports = {
 
     const svgRule = config.module.rule('svg')
     svgRule.uses.clear()
-    svgRule.oneOf('inline')
+    svgRule
+      .oneOf('inline')
+      .resourceQuery(/inline/)
+      .use('vue-svg-icon-loader')
+      .loader('vue-svg-icon-loader')
+      .end()
+      .end()
+      .oneOf('external')
+      .use('file-loader')
+      .loader('file-loader')
+      .options({
+        name: 'assets/[name].[hash:8].[ext]'
+      })
+    /* svgRule.oneOf('inline')
       .resourceQuery(/inline/)
       .use('vue-svg-loader')
       .loader('vue-svg-loader')
@@ -52,6 +65,7 @@ module.exports = {
       .options({
         name: 'assets/[name].[hash:8].[ext]'
       })
+    */
   },
 
   css: {
@@ -72,23 +86,21 @@ module.exports = {
   },
 
   devServer: {
-    proxy: {
-      '/api': {
-        // target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-        target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-        ws: false,
-        changeOrigin: true
-      },
-      '/gateway': {
-        target: 'https://www.easy-mock.com/mock/5b7bce071f130e5b7fe8cd7d/antd-pro',
-        ws: false,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/gateway': '/api'
-        }
-      }
-    }
+    // development server port 8000
+    port: 8000
+    // proxy: {
+    //   '/api': {
+    //     // target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
+    //     target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
+    //     ws: false,
+    //     changeOrigin: true
+    //   }
+    // }
   },
 
-  lintOnSave: undefined
+  // disable source map in production
+  productionSourceMap: false,
+  lintOnSave: undefined,
+  // babel-loader no-ignore node_modules/*
+  transpileDependencies: []
 }
